@@ -6,3 +6,4 @@ Project includes test case of:
   * Test Case 3 - Verify error messages for mandatory fields
 
 
+... more tests in progress, soon will be added
