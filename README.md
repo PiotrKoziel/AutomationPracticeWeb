@@ -7,3 +7,9 @@ Project includes test case of:
 
 
 ... more tests in progress, soon will be added
+
+
+
+
+
+Author: Piotr Kozieł
