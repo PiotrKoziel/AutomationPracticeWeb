@@ -61,7 +61,7 @@ public class UserRegistrationSteps {
     @When("^user selects the title (.*[^/])$")
     public void userSelectsTitle(String title) {
         WebElement theTitle = driver.findElement(By.xpath(" //label[normalize-space()='" + title + "']"));
-        System.out.println(theTitle.getText());
+        //System.out.println(theTitle.getText());
         if (!theTitle.isSelected()) {
             theTitle.click();
         }
@@ -93,11 +93,12 @@ public class UserRegistrationSteps {
     }
 
     @Then("^user successfully sings in$")
-    public void userSignIn(DataTable dataTable) {
+    public void userSignIn(DataTable dataTable2) {
         WebElement userId = driver.findElement(By.xpath("//span[contains(text(),'Jones')]"));
-        Map<String, String> data = dataTable.asMap(String.class, String.class);
+        //System.out.println(userId.getText());
+        Map<String, String> data = dataTable2.asMap(String.class, String.class);
+        Assert.assertTrue(userId.getText().contains(data.get("lastName")));
 
-        assert data.get("lastName").contains(userId.getText());
     }
 
 
@@ -169,7 +170,31 @@ public class UserRegistrationSteps {
 
     }
 
+    @And("^user enters incorrect values in personal information fields$")
+    public void userEntersIncorrectValues(DataTable dataIncorrect){
+        Map<String, String> data1 = dataIncorrect.asMap(String.class, String.class);
+        driver.findElement(By.id("customer_firstname")).sendKeys(data1.get("firstName"));
+        driver.findElement(By.id("customer_lastname")).sendKeys(data1.get("lastName"));
+        driver.findElement(By.id("passwd")).sendKeys(data1.get("password"));
+        driver.findElement(By.name("address1")).sendKeys(data1.get("address"));
+        driver.findElement(By.name("city")).sendKeys(data1.get("city"));
+        driver.findElement(By.id("postcode")).sendKeys(data1.get("zipcode"));
+        driver.findElement(By.id("phone_mobile")).sendKeys(data1.get("phone"));
 
+//       Select selectState = new Select(driver.findElement(By.id("id_state")));
+//       selectState.selectByVisibleText(data1.get("state"));
+//
+//       Select selectCountry = new Select(driver.findElement(By.id("id_country")));
+//       selectCountry.selectByVisibleText(data1.get("country"));
+
+
+
+    }
+
+    @Then("^user sees error messages displayed for respective fields$")
+    public void userSeesErrorMessagesDisplayedForRespectiveFields(){
+
+    }
 
 
 }

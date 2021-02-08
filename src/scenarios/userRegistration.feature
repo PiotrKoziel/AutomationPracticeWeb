@@ -4,6 +4,7 @@ Feature: Register new user. Validation of personal information fields.
     Given   user navigates to web page
     When    user clicks on sign in link
 
+@Positive
   Scenario Outline: create new user account
     And     user enters email address <emailAddress> in 'Create and account' section
     Then    user clicks on Create an Account button
@@ -56,7 +57,7 @@ Feature: Register new user. Validation of personal information fields.
       | @com.eu      | 23@?.!^&s | As@(*hb  |          | 3ed asd | 3456 | dfgh    | deded | 3dc   |         |
 
 
-
+@Err
   Scenario: Verify error messages for mandatory fields.
     And    user enters email address <emailAddress> in 'Create and account' section
     Then   user clicks on Create an Account button
@@ -64,7 +65,7 @@ Feature: Register new user. Validation of personal information fields.
     And    user clicks on register button
     Then   user sees displayed error for the mandatory fields
 
-
+@Inv
   Scenario: Verify invalid email address error.
     When  user enters invalid invalid email address
     And   user clicks enter
