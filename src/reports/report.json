@@ -1,0 +1,131 @@
+[
+  {
+    "line": 1,
+    "elements": [
+      {
+        "line": 3,
+        "name": "",
+        "description": "",
+        "type": "background",
+        "keyword": "Background",
+        "steps": [
+          {
+            "result": {
+              "duration": 6378817864,
+              "status": "passed"
+            },
+            "line": 4,
+            "name": "user navigates to web page",
+            "match": {
+              "location": "UserRegistrationSteps.userNavigateToUrl()"
+            },
+            "keyword": "Given "
+          },
+          {
+            "result": {
+              "duration": 1574074644,
+              "status": "passed"
+            },
+            "line": 5,
+            "name": "user clicks on sign in link",
+            "match": {
+              "location": "UserRegistrationSteps.userClicksOnSignInLink()"
+            },
+            "keyword": "When "
+          }
+        ]
+      },
+      {
+        "before": [
+          {
+            "result": {
+              "duration": 3185636575,
+              "status": "passed"
+            },
+            "match": {
+              "location": "UserRegistrationSteps.setUp()"
+            }
+          }
+        ],
+        "line": 69,
+        "name": "Verify invalid email address error.",
+        "description": "",
+        "id": "register-new-user.-validation-of-personal-information-fields.;verify-invalid-email-address-error.",
+        "after": [
+          {
+            "result": {
+              "duration": 57901,
+              "status": "passed"
+            },
+            "match": {
+              "location": "UserRegistrationSteps.tearDown()"
+            }
+          }
+        ],
+        "type": "scenario",
+        "keyword": "Scenario",
+        "steps": [
+          {
+            "result": {
+              "duration": 746548693,
+              "status": "passed"
+            },
+            "line": 70,
+            "name": "user enters invalid invalid email address",
+            "match": {
+              "arguments": [
+                {
+                  "val": "invalid",
+                  "offset": 20
+                }
+              ],
+              "location": "UserRegistrationSteps.userEntersInvalidEmailAddress(String)"
+            },
+            "keyword": "When "
+          },
+          {
+            "result": {
+              "duration": 66312998,
+              "status": "passed"
+            },
+            "line": 71,
+            "name": "user clicks enter",
+            "match": {
+              "location": "UserRegistrationSteps.userClicksEnter()"
+            },
+            "keyword": "And "
+          },
+          {
+            "result": {
+              "duration": 1209652667,
+              "status": "passed"
+            },
+            "line": 72,
+            "name": "user sees the following message Invalid email address.",
+            "match": {
+              "arguments": [
+                {
+                  "val": "Invalid email address.",
+                  "offset": 32
+                }
+              ],
+              "location": "UserRegistrationSteps.userSeesUnsuccessfulMessage(String)"
+            },
+            "keyword": "Then "
+          }
+        ],
+        "tags": [
+          {
+            "line": 68,
+            "name": "@Inv"
+          }
+        ]
+      }
+    ],
+    "name": "Register new user. Validation of personal information fields.",
+    "description": "",
+    "id": "register-new-user.-validation-of-personal-information-fields.",
+    "keyword": "Feature",
+    "uri": "userRegistration.feature"
+  }
+]
