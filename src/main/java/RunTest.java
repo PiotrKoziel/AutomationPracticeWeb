@@ -7,9 +7,10 @@ import org.junit.runner.RunWith;
 @CucumberOptions(
         features = "src/scenarios/",
         monochrome = true,
-        tags = {"@Inv"},
+        tags = {"@Err"
+                },
         plugin = {"pretty",
-                "html:src/reports/report.html",
+                "html:src/reports/",
                 "json:src/reports/report.json",
         }
 

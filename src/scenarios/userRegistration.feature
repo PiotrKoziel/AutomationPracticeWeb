@@ -1,11 +1,15 @@
-Feature: Register new user. Validation of personal information fields.
+Feature: Tests performs validation of new user register process. User enters correct values in order register. User
+  leaves the fields blank and enters incorrect values.
 
   Background:
     Given   user navigates to web page
     When    user clicks on sign in link
 
-@Positive
-  Scenario Outline: create new user account
+
+  @Pos
+  Scenario Outline: Verifies, if user enters correct values in personal information fields successful registration
+  message is displayed
+
     And     user enters email address <emailAddress> in 'Create and account' section
     Then    user clicks on Create an Account button
     When    user selects the title <title>
@@ -31,8 +35,10 @@ Feature: Register new user. Validation of personal information fields.
       | emailAddress | title | firstName | lastName | password | address   | city      | zipCode | phone       | state  | country       |
       | @gmail.com   | Mr.   | Indiana   | Jones    | jones    | Reckon 13 | Fairbanks | 12345   | 44556677888 | Alaska | United States |
 
-# below scenario still in progress
-  Scenario Outline: Verify error messages for entering incorrect values in fields.
+
+  @Neg
+  Scenario Outline: Verifies, if user enters incorrect values in personal information fields error messages are
+  displayed
 
     And    user enters email address <emailAddress> in 'Create and account' section
     Then   user clicks on Create an Account button
@@ -53,20 +59,21 @@ Feature: Register new user. Validation of personal information fields.
 
 
     Examples:
-      | emailAddress | firstName | lastName | password | address | city | zipCode | phone | state | country |
-      | @com.eu      | 23@?.!^&s | As@(*hb  |          | 3ed asd | 3456 | dfgh    | deded | 3dc   |         |
+      | emailAddress | firstName | lastName | password | address | city   | zipCode | phone | state | country |
+      | @com.eu      | $%T      | $%TTT6    | qwe     |  @3ed4! | $%^TYH  | werty  | erty   | dfgh  |dfghj |
 
 
-@Err
-  Scenario: Verify error messages for mandatory fields.
-    And    user enters email address <emailAddress> in 'Create and account' section
+  @Err
+  Scenario: Verifies, if user leaves mandatory fields empty/blank error messages are displayed
+    And    user enters email address @com.rw in 'Create and account' section
     Then   user clicks on Create an Account button
     And    user leaves mandatory fields empty
     And    user clicks on register button
     Then   user sees displayed error for the mandatory fields
 
-@Inv
-  Scenario: Verify invalid email address error.
+
+  @Inv
+  Scenario: Verifies, if user enters invalid email address error is displayed
     When  user enters invalid invalid email address
     And   user clicks enter
     Then  user sees the following message Invalid email address.
