@@ -1,4 +1,4 @@
-package steps.searchTest;
+package unitTest;
 
 import org.junit.After;
 import org.junit.Assert;
