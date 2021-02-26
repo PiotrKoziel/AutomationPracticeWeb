@@ -1,8 +1,6 @@
-package steps.userRegisrationSteps;
+package steps.userRegistrationSteps;
 
 import cucumber.api.DataTable;
-import cucumber.api.java.After;
-import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -10,56 +8,50 @@ import cucumber.api.java.en.When;
 import helper.AggregatedAsserts;
 import org.junit.Assert;
 import org.openqa.selenium.*;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
+import pages.CreateNewAccountPage;
+import pages.HomePage;
+import pages.LoginPage;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class UserRegistrationSteps {
 
+    LoginPage loginPage = new LoginPage(driver);
+    HomePage homePage = new HomePage(driver);
+    CreateNewAccountPage createNewAccountPage = new CreateNewAccountPage(driver);
     private static WebDriver driver;
     private AggregatedAsserts aggregatedAsserts = new AggregatedAsserts();
 
 
-    @Before
-    public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(7, TimeUnit.SECONDS);
-        driver.manage().window().maximize();
-    }
-
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
-
 
     @Given("^user navigates to web page")
     public void userNavigateToUrl() {
+
         driver.get("http://automationpractice.com/index.php");
     }
 
     @When("^user clicks on sign in link$")
     public void userClicksOnSignInLink() {
-        driver.findElement(By.cssSelector("a[title='Log in to your customer account']")).click();
+        homePage.userClicksSignInButton();
     }
 
     @And("^user enters email address (.*[^/]) in 'Create and account' section$")
     public void userEntersEmail(String emailAddress) {
-        driver.findElement(By.id("email_create")).sendKeys(System.currentTimeMillis() + emailAddress);
-
+        loginPage.userEntersEmailAddress(emailAddress);
     }
 
     @Then("^user clicks on Create an Account button$")
     public void userClicksCreateAnAccountButton() {
-        driver.findElement(By.id("SubmitCreate")).click();
-
+        loginPage.userSubmitsEmailAddress();
     }
+
+
 
     @When("^user selects the title (.*[^/])$")
     public void userSelectsTitle(String title) {
+     //   createNewAccountPage.userSelectsTheTitle(title);
+      
         WebElement theTitle = driver.findElement(By.xpath(" //label[normalize-space()='" + title + "']"));
         //System.out.println(theTitle.getText());
         if (!theTitle.isSelected()) {
@@ -70,14 +62,6 @@ public class UserRegistrationSteps {
     @And("^user enters personal information$")
     public void userEntersPersonalInformation(DataTable dataTable) {
         Map<String, String> data = dataTable.asMap(String.class, String.class);
-
-        driver.findElement(By.id("customer_firstname")).sendKeys(data.get("firstName"));
-        driver.findElement(By.id("customer_lastname")).sendKeys(data.get("lastName"));
-        driver.findElement(By.id("passwd")).sendKeys(data.get("password"));
-        driver.findElement(By.name("address1")).sendKeys(data.get("address"));
-        driver.findElement(By.name("city")).sendKeys(data.get("city"));
-        driver.findElement(By.id("postcode")).sendKeys(data.get("zipcode"));
-        driver.findElement(By.id("phone_mobile")).sendKeys(data.get("phone"));
 
         Select selectState = new Select(driver.findElement(By.id("id_state")));
         selectState.selectByVisibleText(data.get("state"));
