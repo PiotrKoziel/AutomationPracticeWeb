@@ -29,6 +29,7 @@ public class HomePage {
     }
 
     public void userClicksSignInButton() {
+
         signInButton.click();
     }
 

@@ -1,4 +1,4 @@
-Feature: Tests performs validation of new user register process. User enters correct values in order register. User
+Feature: Tests performs validation of new user registration process. User enters correct values in order register. User
   leaves the fields blank and enters incorrect values.
 
   Background:
@@ -26,7 +26,7 @@ Feature: Tests performs validation of new user register process. User enters cor
       | country   | <country>   |
 
 
-    And     user clicks on register button
+    And     user register in application
     Then    user successfully sings in
 
       | lastName | <lastName> |
@@ -54,13 +54,13 @@ Feature: Tests performs validation of new user register process. User enters cor
       | country   | <country>   |
 
 
-    And    user clicks on register button
+    And    user register in application
     Then   user sees error messages displayed for respective fields
 
 
     Examples:
       | emailAddress | firstName | lastName | password | address | city   | zipCode | phone | state | country |
-      | @com.eu      | $%T      | $%TTT6    | qwe     |  @3ed4! | $%^TYH  | werty  | erty   | dfgh  |dfghj |
+      | @com.eu      | $%T      | $%TTT6    | qwe     |  @3ed4! | $%^TYH  | q@dfg  | erty   | dfgh  |- |
 
 
   @Err
@@ -68,7 +68,7 @@ Feature: Tests performs validation of new user register process. User enters cor
     And    user enters email address @com.rw in 'Create and account' section
     Then   user clicks on Create an Account button
     And    user leaves mandatory fields empty
-    And    user clicks on register button
+    And    user register in application
     Then   user sees displayed error for the mandatory fields
 
 

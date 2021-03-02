@@ -1,6 +1,8 @@
 package steps.userRegistrationSteps;
 
 import cucumber.api.DataTable;
+import cucumber.api.java.After;
+import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
@@ -8,21 +10,40 @@ import cucumber.api.java.en.When;
 import helper.AggregatedAsserts;
 import org.junit.Assert;
 import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
 import pages.CreateNewAccountPage;
 import pages.HomePage;
 import pages.LoginPage;
+import pages.UserAccountPage;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class UserRegistrationSteps {
 
-    LoginPage loginPage = new LoginPage(driver);
-    HomePage homePage = new HomePage(driver);
-    CreateNewAccountPage createNewAccountPage = new CreateNewAccountPage(driver);
-    private static WebDriver driver;
+    private WebDriver driver;
     private AggregatedAsserts aggregatedAsserts = new AggregatedAsserts();
 
+
+    private LoginPage loginPage;
+    private HomePage homePage;
+    private CreateNewAccountPage createNewAccountPage;
+    private UserAccountPage userAccountPage;
+
+
+    @Before
+    public void setUp() {
+        System.setProperty("webdriver.chrome.driver", "src/main/resources/drivers/chromedriver.exe");
+        driver = new ChromeDriver();
+        driver.manage().timeouts().implicitlyWait(7, TimeUnit.SECONDS);
+        driver.manage().window().maximize();
+    }
+
+    @After
+    public void tearDown() {
+        //driver.quit();
+    }
 
 
     @Given("^user navigates to web page")
@@ -33,12 +54,14 @@ public class UserRegistrationSteps {
 
     @When("^user clicks on sign in link$")
     public void userClicksOnSignInLink() {
+        homePage = new HomePage(driver);
         homePage.userClicksSignInButton();
     }
 
     @And("^user enters email address (.*[^/]) in 'Create and account' section$")
-    public void userEntersEmail(String emailAddress) {
-        loginPage.userEntersEmailAddress(emailAddress);
+    public void userEntersEmail(String newEmailAddress) {
+        loginPage = new LoginPage(driver);
+        loginPage.userEntersEmailAddress(newEmailAddress);
     }
 
     @Then("^user clicks on Create an Account button$")
@@ -47,137 +70,132 @@ public class UserRegistrationSteps {
     }
 
 
-
     @When("^user selects the title (.*[^/])$")
     public void userSelectsTitle(String title) {
-     //   createNewAccountPage.userSelectsTheTitle(title);
-      
-        WebElement theTitle = driver.findElement(By.xpath(" //label[normalize-space()='" + title + "']"));
-        //System.out.println(theTitle.getText());
-        if (!theTitle.isSelected()) {
-            theTitle.click();
-        }
+        createNewAccountPage = new CreateNewAccountPage(driver);
+        createNewAccountPage.userSelectsTitle(title);
+
     }
 
     @And("^user enters personal information$")
     public void userEntersPersonalInformation(DataTable dataTable) {
-        Map<String, String> data = dataTable.asMap(String.class, String.class);
-
-        Select selectState = new Select(driver.findElement(By.id("id_state")));
-        selectState.selectByVisibleText(data.get("state"));
-
-        Select selectCountry = new Select(driver.findElement(By.id("id_country")));
-        selectCountry.selectByVisibleText(data.get("country"));
+        createNewAccountPage.userEntersFirstName(dataTable);
+        createNewAccountPage.userEntersLastName(dataTable);
+        createNewAccountPage.userEntersPassword(dataTable);
+        createNewAccountPage.userEntersAddress(dataTable);
+        createNewAccountPage.userEntersCity(dataTable);
+        createNewAccountPage.userEntersPostcode(dataTable);
+        createNewAccountPage.userEntersPhone(dataTable);
+        createNewAccountPage.userSelectsState(dataTable);
+        createNewAccountPage.userSelectsCountry(dataTable);
 
     }
 
-    @And("^user clicks on register button$")
-    public void userClicksRegisterButton() {
-        driver.findElement(By.id("submitAccount")).click();
-
+    @And("^user register in application$")
+    public void userRegistersInApplication() {
+        createNewAccountPage.userClicksRegisterButton();
     }
 
     @Then("^user successfully sings in$")
     public void userSignIn(DataTable dataTable) {
-        WebElement userId = driver.findElement(By.xpath("//span[contains(text(),'Jones')]"));
-        //System.out.println(userId.getText());
+        userAccountPage = new UserAccountPage(driver);
         Map<String, String> data = dataTable.asMap(String.class, String.class);
-
-        Assert.assertTrue("log in not completed", userId.getText().contains(data.get("lastName")));
-
+        System.out.println(userAccountPage.getUserId());
+        Assert.assertTrue("log in not completed",
+                userAccountPage.getUserId().contains(data.get("lastName")));
     }
 
 
     @When("^user enters invalid (.*[^/]) email address$")
     public void userEntersInvalidEmailAddress(String invalidEmail) {
-        driver.findElement(By.id("email_create")).sendKeys(invalidEmail);
+        loginPage = new LoginPage(driver);
+        loginPage.userEntersEmailAddress(invalidEmail);
     }
 
 
     @And("^user clicks enter$")
     public void userClicksEnter() {
-        driver.findElement(By.id("email_create")).sendKeys(Keys.ENTER);
+        loginPage.userClicksEnter();
     }
 
 
     @Then("^user sees the following message (.*[^/])$")
     public void userSeesUnsuccessfulMessage(String message) {
-        WebElement invalidMessage = driver.findElement(By.xpath("*//li[contains(text(), 'Invalid')]"));
-        System.out.println(invalidMessage.getText());
-        Assert.assertEquals(message, invalidMessage.getText());
+        Assert.assertEquals(message, loginPage.getInvalidMessage());
     }
 
 
     @And("^user leaves mandatory fields empty$")
     public void userLeavesMandatoryFieldsBlank() throws InterruptedException {
+        createNewAccountPage = new CreateNewAccountPage(driver);
+        createNewAccountPage.userLeavesFirstNameEmpty();
+        createNewAccountPage.userLeavesLastNameEmpty();
+        createNewAccountPage.userLeavesEmailEmpty();
+        createNewAccountPage.userLeavesAddressEmpty();
+        createNewAccountPage.userLeavesCityEmpty();
+        createNewAccountPage.userLeavesPasswordEmpty();
+        createNewAccountPage.userLeavesPhoneEmpty();
+        createNewAccountPage.userLeavesPostalCodeEmpty();
+        createNewAccountPage.userUnselectCountry();
 
-        Thread.sleep(5000);
-
-        WebElement emailBox = driver.findElement(By.id("email"));
-
-        //System.out.println(emailBox.getAttribute("value"));
-        emailBox.clear();
-
-        Select selectCountry = new Select(driver.findElement(By.id("id_country")));
-        selectCountry.selectByIndex(0);
     }
 
     @Then("^user sees displayed error for the mandatory fields$")
     public void userSeesDisplayedErrorForMandatoryFields() {
         aggregatedAsserts.assertTrue("First name text box is not empty",
-                driver.findElement(By.id("customer_firstname")).getAttribute("value").isEmpty());
+                createNewAccountPage.isFirstNameEmpty());
 
         aggregatedAsserts.assertTrue("Last name text box is not empty",
-                driver.findElement(By.id("customer_lastname")).getAttribute("value").isEmpty());
+                createNewAccountPage.isLastNameEmpty());
+
+        aggregatedAsserts.assertTrue("Last name text box is not empty",
+                createNewAccountPage.emailEmpty());
 
         aggregatedAsserts.assertTrue("Password text box is not empty",
-                driver.findElement(By.id("passwd")).getAttribute("value").isEmpty());
-
-        aggregatedAsserts.assertTrue("Email text box is not empty",
-                driver.findElement(By.id("email")).getAttribute("value").isEmpty());
+                createNewAccountPage.isPassNameEmpty());
 
         aggregatedAsserts.assertTrue("Address text box is not empty",
-                driver.findElement(By.name("address1")).getAttribute("value").isEmpty());
+                createNewAccountPage.isAddressNameEmpty());
 
         aggregatedAsserts.assertTrue("City text box is not empty",
-                driver.findElement(By.name("city")).getAttribute("value").isEmpty());
+                createNewAccountPage.isCityEmpty());
 
         aggregatedAsserts.assertTrue("Zip code text box is not empty",
-                driver.findElement(By.id("postcode")).getAttribute("value").isEmpty());
+                createNewAccountPage.isPostalCodeEmpty());
 
         aggregatedAsserts.assertTrue("Phone text box is not empty",
-                driver.findElement(By.id("phone_mobile")).getAttribute("value").isEmpty());
+                createNewAccountPage.isPhoneEmpty());
 
         aggregatedAsserts.assertTrue("State text box is not empty",
-                driver.findElement(By.id("id_state")).getAttribute("value").isEmpty());
+                createNewAccountPage.isStateEmpty());
 
         aggregatedAsserts.assertTrue("Country text box is not empty",
-                driver.findElement(By.id("id_country")).getAttribute("value").isEmpty());
+                createNewAccountPage.isCountryEmpty());
 
         aggregatedAsserts.processAllAssertions();
     }
 
+
     @And("^user enters incorrect values in personal information fields$")
     public void userEntersIncorrectValues(DataTable dataTable) {
-        Map<String, String> data = dataTable.asMap(String.class, String.class);
-        driver.findElement(By.id("customer_firstname")).sendKeys(data.get("firstName"));
-        driver.findElement(By.id("customer_lastname")).sendKeys(data.get("lastName"));
-        driver.findElement(By.id("passwd")).sendKeys(data.get("password"));
-        driver.findElement(By.name("address1")).sendKeys(data.get("address"));
-        driver.findElement(By.name("city")).sendKeys(data.get("city"));
-        driver.findElement(By.id("postcode")).sendKeys(data.get("zipcode"));
-        driver.findElement(By.id("phone_mobile")).sendKeys(data.get("phone"));
+        createNewAccountPage = new CreateNewAccountPage(driver);
+
+        createNewAccountPage.userEntersFirstName(dataTable);
+        createNewAccountPage.userEntersLastName(dataTable);
+        createNewAccountPage.userEntersPassword(dataTable);
+        createNewAccountPage.userEntersAddress(dataTable);
+        createNewAccountPage.userEntersCity(dataTable);
+        createNewAccountPage.userEntersPostcode(dataTable);
+        createNewAccountPage.userEntersPhone(dataTable);
 
         try {
-            Select selectState = new Select(driver.findElement(By.id("id_state")));
-            selectState.selectByVisibleText(data.get("state"));
+            createNewAccountPage.userSelectsState(dataTable);
         } catch (NoSuchElementException ex) {
             System.out.println("No such a option in state list");
         }
 
         try {
-            Select selectCountry = new Select(driver.findElement(By.id("id_country")));
-            selectCountry.selectByVisibleText(data.get("country"));
+            createNewAccountPage.userSelectsCountry(dataTable);
         } catch (NoSuchElementException ex) {
             System.out.println("No such a option in country list");
         }
@@ -188,28 +206,33 @@ public class UserRegistrationSteps {
     public void userSeesErrorMessagesDisplayedForRespectiveFields() {
         try {
 
-            WebElement error = driver.findElement(By.cssSelector("#center_column > div > p"));
-            System.out.println("Number of errors displayed: " + error.getText());
+            System.out.println("Number of errors displayed: " + createNewAccountPage.getError());
+            System.out.println("Error messages:\n" + createNewAccountPage.getErrMsg());
 
-            WebElement errorMessages = driver.findElement(By.xpath("//*[@id='center_column']/div/ol"));
-            String errorMessage = errorMessages.getText().trim().toLowerCase().replaceAll("[: .+]", "");
-            System.out.println("Error messages:\n" + errorMessage);
 
-            Select selectCountry = new Select(driver.findElement(By.id("id_country")));
-            if (!selectCountry.getFirstSelectedOption().getText().equals("-")) {
-                aggregatedAsserts.assertTrue("State is correct", errorMessage.contains("tochooseastate"));
+            if (!createNewAccountPage.firstSelectedOption("-")) {
+                aggregatedAsserts.assertTrue("State is correct",
+                        createNewAccountPage.getErrMsg().contains("tochooseastate"));
 
             } else {
-                aggregatedAsserts.assertTrue("Country is correct", errorMessage.contains("countryisinvalid"));
+                aggregatedAsserts.assertTrue("Country is correct",
+                        createNewAccountPage.getErrMsg().contains("countryisinvalid"));
             }
 
-            aggregatedAsserts.assertTrue("First name is correct", errorMessage.contains("firstnameisinvalid"));
-            aggregatedAsserts.assertTrue("Last name is correct", errorMessage.contains("lastnameisinvalid"));
-            aggregatedAsserts.assertTrue("Password is correct", errorMessage.contains("passwdisinvalid"));
-            aggregatedAsserts.assertTrue("Address is correct", errorMessage.contains("address1isinvalid"));
-            aggregatedAsserts.assertTrue("Zip code is correct", errorMessage.contains("postcodeisinvalid"));
-            aggregatedAsserts.assertTrue("City is correct", errorMessage.contains("cityisinvalid"));
+            aggregatedAsserts.assertTrue("First name is correct",
+                    createNewAccountPage.getErrMsg().contains("firstnameisinvalid"));
+            aggregatedAsserts.assertTrue("Last name is correct",
+                    createNewAccountPage.getErrMsg().contains("lastnameisinvalid"));
+            aggregatedAsserts.assertTrue("Password is correct",
+                    createNewAccountPage.getErrMsg().contains("passwdisinvalid"));
+            aggregatedAsserts.assertTrue("Address is correct",
+                    createNewAccountPage.getErrMsg().contains("address1isinvalid"));
 
+            aggregatedAsserts.assertTrue("Zip code is correct",
+                    createNewAccountPage.getErrMsg().contains("thezip/postalcode"));
+
+            aggregatedAsserts.assertTrue("City is correct",
+                    createNewAccountPage.getErrMsg().contains("cityisinvalid"));
 
             aggregatedAsserts.processAllAssertions();
 

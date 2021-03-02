@@ -1,5 +1,6 @@
 package helper;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -27,4 +28,16 @@ public class WaitForElement {
 
 
     }
+
+    public void waitForElementToBeDisplayed(By locator) {
+
+        FluentWait<WebDriver> wait = new FluentWait<>(driver);
+        wait.withTimeout(Duration.ofSeconds(15)).pollingEvery(Duration.ofMillis(1000)).ignoring(NoSuchElementException.class);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+
+
+    }
+
+
+
 }

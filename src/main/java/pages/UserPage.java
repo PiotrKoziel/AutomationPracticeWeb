@@ -12,6 +12,7 @@ import java.util.List;
 public class UserPage {
 
     private WebDriver driver;
+
     @FindBy(xpath = "//a[@title='Women']")
     WebElement wowensLink;
     @FindBy(xpath = "//*[@id='block_top_menu']/ul/li[1]/ul/li[1]/ul//a")

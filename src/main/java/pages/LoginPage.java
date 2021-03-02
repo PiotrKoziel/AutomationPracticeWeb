@@ -1,5 +1,7 @@
 package pages;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -19,6 +21,8 @@ public class LoginPage {
     WebElement passwordInput;
     @FindBy(id = "SubmitLogin")
     WebElement signInButton;
+    @FindBy(xpath="*//li[contains(text(), 'Invalid')]")
+    WebElement invalidMessage;
 
 
     public LoginPage(WebDriver driver) {
@@ -27,6 +31,7 @@ public class LoginPage {
     }
 
     public void userEntersEmailAddress(String emailAddress) {
+
         emailAddressInput.sendKeys(System.currentTimeMillis() + emailAddress);
     }
 
@@ -41,7 +46,17 @@ public class LoginPage {
     }
 
     public void userSignsIn() {
+
         signInButton.click();
+    }
+
+    public void userClicksEnter(){
+        emailAddressInput.sendKeys(Keys.ENTER);
+    }
+
+    public String getInvalidMessage(){
+        String invMessage = invalidMessage.getText();
+        return invMessage;
     }
 
 
