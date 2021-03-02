@@ -13,4 +13,7 @@ Project includes scenarios to automate functionality of an e-commerce website:
 
 
 
+
+
+
 Author: Piotr Kozieł
