@@ -1,5 +1,5 @@
 # AutomationPractice
-Project includes scenarios to automate functionality of an e-commerce website:
+Project includes scenarios to automate functionality of an e-commerce website - http://automationpractice.com
 * User Registration for an e-commerce website:
      * test case_1(positive)  -  verifies, if user enters correct values in personal information fields successful registration
   message is displayed
