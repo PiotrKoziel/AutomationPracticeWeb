@@ -9,7 +9,7 @@ Project includes scenarios to automate functionality of an e-commerce website - 
      * test case_4(negative)  -  verifies, if user enters invalid email address error is displayed
 * End-to-end Buy Product of an e-commerce website(to be uploaded)
 * Search Product functionality of an e-commerce website:  
-    * test case - validate that product details displayed on product page are same as on the search page
+    * test case - verifies, if product details displayed on product page are the same as on the search page
 
 
 
