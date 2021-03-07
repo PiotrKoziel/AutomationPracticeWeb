@@ -63,6 +63,7 @@ public class ProductPage {
     }
 
     public void userClicksAddToWishlist() {
+
         wishListBtn.click();
     }
 
@@ -73,6 +74,7 @@ public class ProductPage {
 
 
     public String getErrorMessage() {
+
         return errorMessage.getText();
     }
 

@@ -1,11 +1,12 @@
 package pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
@@ -23,6 +24,28 @@ public class DetailedProductPage {
     WebElement addToCartButton;
     @FindBy(xpath = "//*[@title = 'Proceed to checkout']")
     WebElement proceedToCheckoutButton;
+    @FindBy(xpath = "//*[@id='center_column']/p[2]/a[1]")
+    WebElement summaryCheckout;
+    @FindBy(name = "processAddress")
+    WebElement addressCheckout;
+    @FindBy(id = "cgv")
+    WebElement termsOfService;
+    @FindBy(name = "processCarrier")
+    WebElement shippingCheckout;
+    @FindBy(xpath = "//*[contains(text(), 'Pay by check')]")
+    WebElement payByCheck;
+    @FindBy(xpath = "//*[@id='center_column']/p[1]")
+    WebElement successMsg;
+    @FindBy(xpath = "//*[@id='cart_navigation']/button")
+    WebElement confirmBtn;
+    @FindBy(name = "quantity_1_6_0_443127")
+    WebElement quantityInputOrder;
+    @FindBy(id = "product_price_1_6_443127")
+    WebElement pricePerUnit;
+    @FindBy(id = "total_product_price_1_6_443127")
+    WebElement totalAmount;
+    @FindBy(name = "quantity_1_6_0_443127_hidden")
+    WebElement hiddenQuantity;
 
 
     public DetailedProductPage(WebDriver driver) {
@@ -43,7 +66,6 @@ public class DetailedProductPage {
 
     public void userSelectsColor(String col) {
         for (WebElement color : colorList) {
-            //System.out.println(color.getAttribute("title"));
             if (color.getAttribute("title").equals(col)) {
                 color.click();
             }
@@ -58,5 +80,8 @@ public class DetailedProductPage {
     public void userClicksProceedToCheckout() {
         proceedToCheckoutButton.click();
     }
+
+
+
 
 }

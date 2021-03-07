@@ -1,7 +1,5 @@
 package pages;
 
-import org.junit.Assert;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -12,29 +10,39 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class OrderPage {
 
     private WebDriver driver;
+
     @FindBy(name = "quantity_1_6_0_443127")
     WebElement qtyInput;
+
     @FindBy(name = "quantity_1_6_0_443127_hidden")
     WebElement modifiedQuantity;
+
     @FindBy(id = "product_price_1_6_443127")
     WebElement pricePerUnit;
+
     @FindBy(id = "total_product_price_1_6_443127")
     WebElement totalPriceToCompare;
+
     @FindBy(xpath = "//*[@id='center_column']/p[2]/a[1]")
-    WebElement proceedToAddress;
+    WebElement proceedToCheckoutSummary;
+
     @FindBy(name = "processAddress")
-    WebElement proceedShipping;
+    WebElement proceedToCheckoutAddress;
+
     @FindBy(id = "cgv")
     WebElement termsOfServiceCheckbox;
+
     @FindBy(name = "processCarrier")
-    WebElement proceedToPayment;
+    WebElement proceedToCheckoutShipping;
+
     @FindBy(xpath = "//*[contains(text(), 'Pay by check')]")
     WebElement payByCheckMethod;
+
     @FindBy(xpath = "//*[@id='cart_navigation']/button")
     WebElement confirmButton;
+
     @FindBy(xpath = "//*[@id='center_column']/p[1]")
     WebElement successMessage;
-
 
 
     public OrderPage(WebDriver driver) {
@@ -47,6 +55,8 @@ public class OrderPage {
         qtyInput.clear();
         qtyInput.sendKeys(quantity2);
 
+        WebDriverWait wait = new WebDriverWait(driver, 5);
+        wait.until(ExpectedConditions.attributeToBe(modifiedQuantity, "value", quantity2));
     }
 
     public String getUnitPriceOff() {
@@ -55,57 +65,50 @@ public class OrderPage {
     }
 
     public String getTotalPriceToCompareOff() {
-
         String totalPriceToCompareOff = totalPriceToCompare.getText().trim().substring(1);
         return totalPriceToCompareOff;
     }
 
-    public Boolean ExpectedCondition(String valueOfAtt) {
-        WebDriverWait wait = new WebDriverWait(driver, 5);
-        Boolean doesAttributeEqualValue =
-                wait.until(ExpectedConditions.attributeToBe(modifiedQuantity, "value", valueOfAtt));
-        return doesAttributeEqualValue;
+
+    public void userClicksProceedToCheckoutAtSummary() {
+        proceedToCheckoutSummary.click();
     }
 
-    public String getQuantity() {
-        String changedQuantity = modifiedQuantity.getAttribute("value");
-        return changedQuantity;
-    }
-
-    public void proceedToAddress() {
-        proceedToAddress.click();
-    }
-
-    public void proceedToShipping() {
-        proceedShipping.click();
+    public void userClicksProceedToCheckoutAtAddress() {
+        proceedToCheckoutAddress.click();
 
     }
 
     public Boolean termsOfService() {
-     Boolean termsMatched=!termsOfServiceCheckbox.isSelected();
-        return termsMatched;
+        return termsOfServiceCheckbox.isSelected();
     }
 
-    public void termsOfServiceMatched(){
-
+    public void userClicksTermsOfService() {
         termsOfServiceCheckbox.click();
     }
 
 
-    public void proceedToPayment() {
-        proceedToPayment.click();
+    public void userClicksProceedToCheckoutAtSipping() {
+
+        proceedToCheckoutShipping.click();
     }
 
-    public void payByCheckMethod(){
+
+    public void payByCheckMethod() {
         payByCheckMethod.click();
     }
 
-    public void orderConfirmed(){
+    public void orderConfirmed() {
+
         confirmButton.click();
     }
 
-    public String getSuccessMessage(){
-        String successMsg = successMessage.getText();
-    return successMsg;
+    public String getModifiedQty() {
+        return modifiedQuantity.getAttribute("value");
+    }
+
+
+    public String getSuccessMessage() {
+        return successMessage.getText();
     }
 }
