@@ -16,7 +16,10 @@ the total price is displayed correctly
     * test case - verifies, if product details displayed on product page are the same as on the search page
 
 
-
+Technologies used:
+* Java
+* Cucumber
+* Page Object Model(Page Factory)
 
 
 
